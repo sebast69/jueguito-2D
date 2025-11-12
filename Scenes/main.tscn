@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://djq06upuhtv7g"]
+
+[ext_resource type="Script" uid="uid://6pylh0bd335j" path="res://Scripts/Main.gd" id="1_rgh2o"]
+[ext_resource type="PackedScene" uid="uid://dnwoluj15p8c0" path="res://Scenes/Mob.tscn" id="2_pbw6q"]
+[ext_resource type="PackedScene" uid="uid://b1usfh6ararlb" path="res://Scenes/Player.tscn" id="3_v1gob"]
+[ext_resource type="PackedScene" uid="uid://c7n5wxgquude4" path="res://Scenes/HUD.tscn" id="4_jw32o"]
+[ext_resource type="AudioStream" uid="uid://l5tdwh1rqtfq" path="res://Assets/Music/House In a Forest Loop.ogg" id="5_v1gob"]
+[ext_resource type="AudioStream" uid="uid://toxyvs4xmui5" path="res://Assets/sfx/gameover.wav" id="6_jw32o"]
+
+[sub_resource type="Curve2D" id="Curve2D_idj7w"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 479, -1, 0, 0, 0, 0, 480, 719, 0, 0, 0, 0, 0, -1)
+}
+point_count = 4
+
+[node name="Main" type="Node"]
+script = ExtResource("1_rgh2o")
+mob_scene = ExtResource("2_pbw6q")
+
+[node name="MobTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(240, 450)
+
+[node name="MobPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_idj7w")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+position = Vector2(0, -1)
+
+[node name="Player" parent="." instance=ExtResource("3_v1gob")]
+disable_mode = 2
+
+[node name="HUD" parent="." instance=ExtResource("4_jw32o")]
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_v1gob")
+parameters/looping = true
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_jw32o")
+
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="hit" from="Player" to="." method="game_over"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]

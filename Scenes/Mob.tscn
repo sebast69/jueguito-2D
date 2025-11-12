@@ -1,0 +1,72 @@
+[gd_scene load_steps=11 format=3 uid="uid://dnwoluj15p8c0"]
+
+[ext_resource type="Script" uid="uid://jkkp2n4k4wrb" path="res://Scripts/Mob.gd" id="1_spujv"]
+[ext_resource type="Texture2D" uid="uid://scgid3jyvcqj" path="res://Assets/sprites/enemyFlyingAlt_1.png" id="1_u40of"]
+[ext_resource type="Texture2D" uid="uid://7mv717b8tp08" path="res://Assets/sprites/enemyFlyingAlt_2.png" id="2_spujv"]
+[ext_resource type="Texture2D" uid="uid://cfhk32fishv8n" path="res://Assets/sprites/enemySwimming_1.png" id="3_8ivhl"]
+[ext_resource type="Texture2D" uid="uid://dljdjar3kceqc" path="res://Assets/sprites/enemySwimming_2.png" id="4_das2q"]
+[ext_resource type="Texture2D" uid="uid://cwug40h50l7sp" path="res://Assets/sprites/enemyWalking_1.png" id="5_88dyv"]
+[ext_resource type="Texture2D" uid="uid://tjcgkufvkn2m" path="res://Assets/sprites/enemyWalking_2.png" id="6_1j0qt"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_u0piq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_shaxa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_u40of")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_spujv")
+}],
+"loop": true,
+"name": &"Fly",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_8ivhl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_das2q")
+}],
+"loop": true,
+"name": &"Swim",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_88dyv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_1j0qt")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 3.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_spujv"]
+radius = 20.0
+height = 40.0
+
+[node name="mob" type="RigidBody2D" groups=["mobs"]]
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_u0piq")
+gravity_scale = 0.0
+script = ExtResource("1_spujv")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_shaxa")
+animation = &"Walk"
+frame_progress = 0.9504817
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_spujv")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
